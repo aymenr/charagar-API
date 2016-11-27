@@ -21,10 +21,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //controllers
 var index = require('./controllers/index.js');
+var user = require('./controllers/user.js');
 
 
 //routes
 app.get('/', index.index);
+
+
+//front end user routes
+app.post('/loginUser', user.loginUser);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

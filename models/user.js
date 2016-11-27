@@ -21,6 +21,9 @@ var userSchema = new Schema(
         unique: true,
         sparse: true
     },
+    name:String,
+    city:String,
+    country:String,
     facebookID: String,
     avatar: String,
     password: String,
