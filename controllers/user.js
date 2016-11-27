@@ -4,10 +4,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var q = require('q');
 var _ = require('lodash-node');
 
-/*--------------------------------------------
-Login / Signup
---------------------------------------------*/
-
 var userProjection=
 {
     password:0,
@@ -39,10 +35,10 @@ exports.loginUser = function(req, res)
         }
         if (!result)
         {
-           utilities.make_error(res, 'NOT_EXISTS', "Incorrect email or password");
-       }
-       else
-       {
+         utilities.make_error(res, 'NOT_EXISTS', "Incorrect email or password");
+     }
+     else
+     {
         res.send(result);
     };
 })
@@ -110,10 +106,10 @@ exports.signupUser = function(req, res)
     {
         if (err)
         {
-           utilities.make_error(res, "API_EXCEPTION", err.message);
-       }
-       else
-       {
+         utilities.make_error(res, "API_EXCEPTION", err.message);
+     }
+     else
+     {
         if (result)
         {
             utilities.make_error(res,"CANNOT_CREATE","You have already signed up. Login Instead")
@@ -177,43 +173,53 @@ function createUserAccount(userData)
 }
 
 
-exports.addCampaign = function(req, res)
+exports.saveCampaign = function(req, res)
 {
+    console.log("saving campaign")
 
     var userId = ObjectId(req.body.userId);
     var date = Date.now();
+    var campaign = req.body.campaign;
+    utilities.getID(campaign);
 
-    userModel.User.findByIdAndUpdate(
-        userId,
-        {
-            $push:
+    userModel.User
+    .find(
+    {
+        "_id":userId,
+    })
+    .exec(function(err,docs){
+        if(err) {
+            console.log(err);
+        } else {
+            var campaignItem = new userModel.Campaign(campaign);
+            var upsertData = campaignItem.toObject();
+
+            delete upsertData._id;
+            delete upsertData.__v;
+            console.log("look: ", docs[0]);
+            var alreadyExistingIndex = _.findIndex(docs[0].campaigns, {'_id': campaign._id});
+
+            campaignItem = utilities.setTimestamps(campaignItem);
+
+            if (alreadyExistingIndex != -1) {
+
+                docs[0].campaigns[alreadyExistingIndex] = campaignItem;
+
+            } else {
+
+                docs[0].campaigns.push(campaignItem);
+            }
+
+            docs[0].save(function(err)
             {
-                "campaigns":
-                {
-                    "name": req.body.name,
-                    "goal": req.body.goal,
-                    "description": req.body.description,
-                    "campaignImage": "placeholder.jpeg",
-                    "campaignStartDate": date
+                if (err) {
+                     utilities.make_error(res, 'API_EXCEPTION',err.message);
+                } else {
+                    res.send("Campaign Saved");
                 }
-            }
-        },
-        {
-            safe: true,
-            upsert: true
-        },
-        function(err, model)
-        {
-            if (err)
-            {
-                utilities.make_error(res, 'API_EXCEPTION',err.message);
-            }
-            else
-            {
-                res.send(200);
-            }
+            });
         }
-        );
+    })
 }
 
 
@@ -225,36 +231,37 @@ exports.removeCampaign = function(req, res)
 
     var date = new Date();
     userModel.User
-        .update(
+    .update(
+    {
+        "campaigns._id": campaignId
+    },
+    {
+        "$pull":
+        {
+            "campaigns":
             {
-                "campaigns._id": campaignId
-            },
-            {
-                "$pull":
-                {
-                    "campaigns":
-                    {
-                        _id: campaignId
-                    }
-                },
-                "$set":
-                {
-                    "updatedAt": date
-                }
-            },
-            {
-                "multi": false
-            },
-            function(err, result)
-            {
-                if (err)
-                {
-                    utilities.make_error(res, 'API_EXCEPTION',err.message);
+                _id: campaignId
+            }
+        },
+        "$set":
+        {
+            "updatedAt": date
+        }
+    },
+    {
+        "multi": false
+    },
+    function(err, result)
+    {
+        if (err)
+        {
+            utilities.make_error(res, 'API_EXCEPTION',err.message);
 
-                }
-                else
-                {
-                    res.send(200);
-                }
-            });
+        }
+        else
+        {
+            res.send(200);
+        }
+    });
 }
+

@@ -33,7 +33,7 @@ app.post('/loginUser', user.loginUser);
 app.get('/getUserPersonalData/:userId', user.getUserPersonalData);
 app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
 app.post('/signupUser',user.signupUser);
-app.post('/addCampaign',user.addCampaign);
+app.post('/saveCampaign',user.saveCampaign);
 app.delete('/removeCampaign/:campaignId', user.removeCampaign);
 
 // catch 404 and forward to error handler

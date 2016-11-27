@@ -19,3 +19,14 @@ exports.make_error = function(res, type, text)
     res.status(500).send(JSON.stringify(error_object));
 }
 
+exports.getID = function(item)
+{
+    var id;
+    if (item._id)
+        id = item._id = new ObjectId(item._id);
+    else
+        id = new ObjectId();
+
+    return id;
+}
+
