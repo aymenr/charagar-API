@@ -44,7 +44,8 @@ var userSchema = new Schema(
     signupDate: Date,
     lastLogin: Date,
     forgotPasswordToken: String,
-    linkedIdentifier: String // for uniquely identifying user when sharing
+    linkedIdentifier: String, // for uniquely identifying user when sharing
+    updatedAt:Date
 });
 
 var User = mongoose.model('User', userSchema);

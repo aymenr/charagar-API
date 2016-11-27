@@ -24,28 +24,28 @@ exports.loginUser = function(req, res)
     console.log(userEmail);
 
     userModel.User
-        .findOne(
+    .findOne(
+    {
+        email: userEmail,
+        password: req.body.password
+    },
+    userProjection)
+    .lean()
+    .exec(function(err, result)
+    {
+        if (err)
         {
-            email: userEmail,
-            password: req.body.password
-        },
-        userProjection)
-        .lean()
-        .exec(function(err, result)
+            utilities.make_error(res, 'API_EXCEPTION', err.message);
+        }
+        if (!result)
         {
-            if (err)
-            {
-                utilities.make_error(res, 'API_EXCEPTION', err.message);
-            }
-            if (!result)
-            {
-                 utilities.make_error(res, 'NOT_EXISTS', "Incorrect email or password");
-            }
-            else
-            {
-                res.send(result);
-            };
-        })
+           utilities.make_error(res, 'NOT_EXISTS', "Incorrect email or password");
+       }
+       else
+       {
+        res.send(result);
+    };
+})
 
 }
 
@@ -58,19 +58,19 @@ exports.getUserPersonalData = function(req, res)
     }
     var id = req.params.userId;
     userModel.User
-        .find(
+    .find(
         { _id: new ObjectId(id)}, userProjection)
-        .exec(function(err, result)
+    .exec(function(err, result)
+    {
+        if (err)
         {
-            if (err)
-            {
-                utilities.make_error(res, 'API_EXCEPTION', err.message);
-            }
-            else
-            {
-                res.send(result);
-            }
-        });
+            utilities.make_error(res, 'API_EXCEPTION', err.message);
+        }
+        else
+        {
+            res.send(result);
+        }
+    });
 }
 
 exports.getUserCampaigns = function(req, res)
@@ -82,56 +82,56 @@ exports.getUserCampaigns = function(req, res)
     }
     var id = req.params.userId;
     userModel.User
-        .find(
+    .find(
         { _id: new ObjectId(id)}, userProjection)
-        .exec(function(err, result)
+    .exec(function(err, result)
+    {
+        if (err)
         {
-            if (err)
-            {
-                utilities.make_error(res, 'API_EXCEPTION', err.message);
-            }
-            else
-            {
-                res.send(result);
-            }
-        });
+            utilities.make_error(res, 'API_EXCEPTION', err.message);
+        }
+        else
+        {
+            res.send(result);
+        }
+    });
 }
 
 exports.signupUser = function(req, res)
 {
 
     userModel.User
-        .findOne(
+    .findOne(
+    {
+        "email": req.body.email.toLowerCase()
+    })
+    .lean()
+    .exec(function(err, result)
+    {
+        if (err)
         {
-            "email": req.body.email.toLowerCase()
-        })
-        .lean()
-        .exec(function(err, result)
+           utilities.make_error(res, "API_EXCEPTION", err.message);
+       }
+       else
+       {
+        if (result)
         {
-            if (err)
-            {
-                 utilities.make_error(res, "API_EXCEPTION", err.message);
-            }
-            else
-            {
-                if (result)
-                {
-                    utilities.make_error(res,"CANNOT_CREATE","You have already signed up. Login Instead")
-                }
-                else
-                {
-                    var userData = {
-                        email: req.body.email.toLowerCase(),
-                        userName: req.body.userName,
-                        password: req.body.password,
-                        phone: req.body.phone,
-                        city: req.body.city,
-                        country: req.body.country
-                    };
-                    performUserSignup(userData, res);
-                }
-            }
-        });
+            utilities.make_error(res,"CANNOT_CREATE","You have already signed up. Login Instead")
+        }
+        else
+        {
+            var userData = {
+                email: req.body.email.toLowerCase(),
+                userName: req.body.userName,
+                password: req.body.password,
+                phone: req.body.phone,
+                city: req.body.city,
+                country: req.body.country
+            };
+            performUserSignup(userData, res);
+        }
+    }
+});
 }
 
 
@@ -213,5 +213,48 @@ exports.addCampaign = function(req, res)
                 res.send(200);
             }
         }
-    );
+        );
+}
+
+
+
+
+exports.removeCampaign = function(req, res)
+{
+    var campaignId= req.params.campaignId;
+
+    var date = new Date();
+    userModel.User
+        .update(
+            {
+                "campaigns._id": campaignId
+            },
+            {
+                "$pull":
+                {
+                    "campaigns":
+                    {
+                        _id: campaignId
+                    }
+                },
+                "$set":
+                {
+                    "updatedAt": date
+                }
+            },
+            {
+                "multi": false
+            },
+            function(err, result)
+            {
+                if (err)
+                {
+                    utilities.make_error(res, 'API_EXCEPTION',err.message);
+
+                }
+                else
+                {
+                    res.send(200);
+                }
+            });
 }
