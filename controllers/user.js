@@ -176,3 +176,42 @@ function createUserAccount(userData)
     return deferred.promise;
 }
 
+
+exports.addCampaign = function(req, res)
+{
+
+    var userId = ObjectId(req.body.userId);
+    var date = Date.now();
+
+    userModel.User.findByIdAndUpdate(
+        userId,
+        {
+            $push:
+            {
+                "campaigns":
+                {
+                    "name": req.body.name,
+                    "goal": req.body.goal,
+                    "description": req.body.description,
+                    "campaignImage": "placeholder.jpeg",
+                    "campaignStartDate": date
+                }
+            }
+        },
+        {
+            safe: true,
+            upsert: true
+        },
+        function(err, model)
+        {
+            if (err)
+            {
+                utilities.make_error(res, 'API_EXCEPTION',err.message);
+            }
+            else
+            {
+                res.send(200);
+            }
+        }
+    );
+}

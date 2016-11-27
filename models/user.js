@@ -9,6 +9,7 @@ var userCampaignSchema = new Schema(
     goal: Number,
     description: String,
     campaignImage: String,
+    campaignStartDate: Date
     //@todo: add category from predefined list
 });
 
