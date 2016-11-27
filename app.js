@@ -31,6 +31,7 @@ app.get('/', index.index);
 //front end user routes
 app.post('/loginUser', user.loginUser);
 app.get('/getUserPersonalData/:userId', user.getUserPersonalData);
+app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

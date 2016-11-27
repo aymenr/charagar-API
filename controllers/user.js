@@ -69,3 +69,27 @@ exports.getUserPersonalData = function(req, res)
             }
         });
 }
+
+exports.getUserCampaigns = function(req, res)
+{
+
+    var userProjection = {
+        campaigns:1,
+        _id:0
+    }
+    var id = req.params.userId;
+    userModel.User
+        .find(
+        { _id: new ObjectId(id)}, userProjection)
+        .exec(function(err, result)
+        {
+            if (err)
+            {
+                utilities.make_error(res, 'API_EXCEPTION', err.message);
+            }
+            else
+            {
+                res.send(result);
+            }
+        });
+}
