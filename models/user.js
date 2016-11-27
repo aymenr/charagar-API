@@ -3,6 +3,15 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.ObjectId;
 
 
+var userCampaignSchema = new Schema(
+{
+    name: String,
+    goal: Number,
+    description: String,
+    campaignImage: String,
+    //@todo: add category from predefined list
+});
+
 var userSchema = new Schema(
 {
     userName:
@@ -22,8 +31,11 @@ var userSchema = new Schema(
         sparse: true
     },
     name:String,
+    campaigns: [userCampaignSchema],
     city:String,
     country:String,
+    postalCode:String,
+    streetAddress:String,
     facebookID: String,
     avatar: String,
     password: String,
