@@ -1,6 +1,6 @@
 var userModel = require('../models/user.js');
 var utilities = require('./helpers.js')
-
+var ObjectId = require('mongoose').Types.ObjectId;
 /*--------------------------------------------
 Login / Signup
 --------------------------------------------*/
@@ -44,4 +44,28 @@ exports.loginUser = function(req, res)
             };
         })
 
+}
+
+exports.getUserPersonalData = function(req, res)
+{
+    var userProjection = {
+        password:0,
+        _id:0,
+        campaigns:0
+    }
+    var id = req.params.userId;
+    userModel.User
+        .find(
+        { _id: new ObjectId(id)}, userProjection)
+        .exec(function(err, result)
+        {
+            if (err)
+            {
+                utilities.make_error(res, 'API_EXCEPTION', err.message);
+            }
+            else
+            {
+                res.send(result);
+            }
+        });
 }
