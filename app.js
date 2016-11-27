@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var config = require('./config/config.json');
 
 var app = express();
 
@@ -32,7 +33,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-
+mongoose.connect(config.dbPath);
 
 
 
