@@ -14,6 +14,7 @@ var userProjection=
 
 exports.loginUser = function(req, res)
 {
+    console.log("come here");
     var userEmail = "";
     if (req.body.email)
         userEmail = req.body.email.toLowerCase();

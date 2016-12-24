@@ -19,10 +19,51 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
 //controllers
 var index = require('./controllers/index.js');
 var user = require('./controllers/user.js');
 
+var allowCrossDomain = function(req, res, next)
+{
+    var host = "http://";
+    var origins = [
+        host + "0.0.0.0:8800",
+        host + "0.0.0.0:8000",
+        host + "192.168.1.9:8800",
+        host + "localhost:8800",
+        host + "localhost:9000",
+        host + "localhost:9001",
+        host + "localhost:3000"
+    ];
+
+    if (typeof(req.headers.origin) !== 'undefined' &&
+        (origins.indexOf(req.headers.origin) > -1 ||
+            req.headers.origin.indexOf("chrome-extension") > -1
+        )
+    ) // found
+    {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+    }
+    else
+    {
+        res.header('Access-Control-Allow-Origin', "http://patari.pk");
+    }
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cache-Control');
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method)
+    {
+        res.send(200);
+    }
+    else
+    {
+        next();
+    }
+}
+
+
+app.use(allowCrossDomain);
 
 //routes
 app.get('/', index.index);
@@ -46,7 +87,6 @@ app.use(function(req, res, next) {
 
 
 app.set('view engine', 'jade');
-
 mongoose.connect(config.dbPath);
 
 

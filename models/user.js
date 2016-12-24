@@ -9,7 +9,8 @@ var campaignSchema = new Schema(
     goal: Number,
     description: String,
     campaignImage: String,
-    campaignStartDate: Date
+    campaignStartDate: Date,
+    published: Boolean
     //@todo: add category from predefined list
 });
 
@@ -42,10 +43,10 @@ var userSchema = new Schema(
     password: String,
     accessLevel: Number,
     signupDate: Date,
-    lastLogin: Date,
     forgotPasswordToken: String,
     linkedIdentifier: String, // for uniquely identifying user when sharing
-    updatedAt:Date
+    updatedAt:Date,
+    createdAt:Date
 });
 
 var User = mongoose.model('User', userSchema);
