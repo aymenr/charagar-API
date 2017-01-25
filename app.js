@@ -23,6 +23,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //controllers
 var index = require('./controllers/index.js');
 var user = require('./controllers/user.js');
+var campaign= require('./controllers/campaign.js');
+
 
 var allowCrossDomain = function(req, res, next)
 {
@@ -69,14 +71,16 @@ app.use(allowCrossDomain);
 app.get('/', index.index);
 
 
-//front end user routes
+
 app.post('/loginUser', user.loginUser);
 app.get('/getUserPersonalData/:userId', user.getUserPersonalData);
-app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
+// app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
 app.post('/signupUser',user.signupUser);
-app.post('/saveCampaign',user.saveCampaign);
-app.delete('/removeCampaign/:campaignId', user.removeCampaign);
-
+//app.post('/saveCampaign',user.saveCampaign);
+//app.delete('/removeCampaign/:campaignId', user.removeCampaign);
+app.get('/getLiveCampaigns',campaign.getLiveCampaigns);
+app.get('/getPastCampaigns',campaign.getPastCampaigns);
+app.get('/getCampaign/:campaignId',campaign.getCampaign);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

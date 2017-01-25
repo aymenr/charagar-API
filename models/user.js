@@ -3,16 +3,6 @@ var mongoose = require('mongoose'),
     ObjectId = Schema.ObjectId;
 
 
-var campaignSchema = new Schema(
-{
-    name: String,
-    goal: Number,
-    description: String,
-    campaignImage: String,
-    campaignStartDate: Date,
-    published: Boolean
-    //@todo: add category from predefined list
-});
 
 var userSchema = new Schema(
 {
@@ -33,7 +23,7 @@ var userSchema = new Schema(
         sparse: true
     },
     name:String,
-    campaigns: [campaignSchema],
+    campaigns: [],
     city:String,
     country:String,
     postalCode:String,
@@ -50,9 +40,7 @@ var userSchema = new Schema(
 });
 
 var User = mongoose.model('User', userSchema);
-var Campaign = mongoose.model('Campaign', campaignSchema);
 
 module.exports = {
-    User: User,
-    Campaign: Campaign
+    User: User
 };

@@ -21,6 +21,7 @@ exports.make_error = function(res, type, text)
 
 exports.getID = function(item)
 {
+    console.log("inside get id:", item);
     var id;
     if (item._id)
         id = item._id = new ObjectId(item._id);

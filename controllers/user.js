@@ -14,7 +14,7 @@ var userProjection=
 
 exports.loginUser = function(req, res)
 {
-    console.log("come here");
+
     var userEmail = "";
     if (req.body.email)
         userEmail = req.body.email.toLowerCase();
@@ -70,29 +70,29 @@ exports.getUserPersonalData = function(req, res)
     });
 }
 
-exports.getUserCampaigns = function(req, res)
-{
+// exports.getUserCampaigns = function(req, res)
+// {
 
-    var userProjection = {
-        campaigns:1,
-        _id:0
-    }
-    var id = req.params.userId;
-    userModel.User
-    .find(
-        { _id: new ObjectId(id)}, userProjection)
-    .exec(function(err, result)
-    {
-        if (err)
-        {
-            utilities.make_error(res, 'API_EXCEPTION', err.message);
-        }
-        else
-        {
-            res.send(result);
-        }
-    });
-}
+//     var userProjection = {
+//         campaigns:1,
+//         _id:0
+//     }
+//     var id = req.params.userId;
+//     userModel.User
+//     .find(
+//         { _id: new ObjectId(id)}, userProjection)
+//     .exec(function(err, result)
+//     {
+//         if (err)
+//         {
+//             utilities.make_error(res, 'API_EXCEPTION', err.message);
+//         }
+//         else
+//         {
+//             res.send(result);
+//         }
+//     });
+// }
 
 exports.signupUser = function(req, res)
 {
@@ -174,95 +174,99 @@ function createUserAccount(userData)
 }
 
 
-exports.saveCampaign = function(req, res)
-{
-    console.log("saving campaign")
+// exports.saveCampaign = function(req, res)
+// {
+//     console.log("saving campaign")
 
-    var userId = ObjectId(req.body.userId);
-    var date = Date.now();
-    var campaign = req.body.campaign;
-    utilities.getID(campaign);
+//     var userId = ObjectId(req.body.userId);
+//     console.log("body:", req.body);
+//     var date = Date.now();
+//     console.log("abc");
+//     var campaign = req.body.campaign;
+//     console.log("def:", campaign);
+//     utilities.getID(campaign);
+//     console.log("xxyz");
+//     userModel.User
+//     .find(
+//     {
+//         "_id":userId,
+//     })
+//     .exec(function(err,docs){
+//         if(err) {
+//             console.log(err);
+//         } else {
+//             console.log("gonna save now");
+//             var campaignItem = new userModel.Campaign(campaign);
+//             var upsertData = campaignItem.toObject();
 
-    userModel.User
-    .find(
-    {
-        "_id":userId,
-    })
-    .exec(function(err,docs){
-        if(err) {
-            console.log(err);
-        } else {
-            var campaignItem = new userModel.Campaign(campaign);
-            var upsertData = campaignItem.toObject();
+//             delete upsertData._id;
+//             delete upsertData.__v;
+//             console.log("look: ", docs[0]);
+//             var alreadyExistingIndex = _.findIndex(docs[0].campaigns, {'_id': campaign._id});
 
-            delete upsertData._id;
-            delete upsertData.__v;
-            console.log("look: ", docs[0]);
-            var alreadyExistingIndex = _.findIndex(docs[0].campaigns, {'_id': campaign._id});
+//             campaignItem = utilities.setTimestamps(campaignItem);
 
-            campaignItem = utilities.setTimestamps(campaignItem);
+//             if (alreadyExistingIndex != -1) {
 
-            if (alreadyExistingIndex != -1) {
+//                 docs[0].campaigns[alreadyExistingIndex] = campaignItem;
 
-                docs[0].campaigns[alreadyExistingIndex] = campaignItem;
+//             } else {
 
-            } else {
+//                 docs[0].campaigns.push(campaignItem);
+//             }
 
-                docs[0].campaigns.push(campaignItem);
-            }
-
-            docs[0].save(function(err)
-            {
-                if (err) {
-                     utilities.make_error(res, 'API_EXCEPTION',err.message);
-                } else {
-                    res.send("Campaign Saved");
-                }
-            });
-        }
-    })
-}
+//             docs[0].save(function(err)
+//             {
+//                 if (err) {
+//                      utilities.make_error(res, 'API_EXCEPTION',err.message);
+//                 } else {
+//                     res.send("Campaign Saved");
+//                 }
+//             });
+//         }
+//     })
+// }
 
 
 
 
-exports.removeCampaign = function(req, res)
-{
-    var campaignId= req.params.campaignId;
+// exports.removeCampaign = function(req, res)
+// {
+//     var campaignId= req.params.campaignId;
 
-    var date = new Date();
-    userModel.User
-    .update(
-    {
-        "campaigns._id": campaignId
-    },
-    {
-        "$pull":
-        {
-            "campaigns":
-            {
-                _id: campaignId
-            }
-        },
-        "$set":
-        {
-            "updatedAt": date
-        }
-    },
-    {
-        "multi": false
-    },
-    function(err, result)
-    {
-        if (err)
-        {
-            utilities.make_error(res, 'API_EXCEPTION',err.message);
+//     var date = new Date();
+//     userModel.User
+//     .update(
+//     {
+//         "campaigns._id": campaignId
+//     },
+//     {
+//         "$pull":
+//         {
+//             "campaigns":
+//             {
+//                 _id: campaignId
+//             }
+//         },
+//         "$set":
+//         {
+//             "updatedAt": date
+//         }
+//     },
+//     {
+//         "multi": false
+//     },
+//     function(err, result)
+//     {
+//         if (err)
+//         {
+//             utilities.make_error(res, 'API_EXCEPTION',err.message);
 
-        }
-        else
-        {
-            res.send(200);
-        }
-    });
-}
+//         }
+//         else
+//         {
+//             res.send(200);
+//         }
+//     });
+// }
 
