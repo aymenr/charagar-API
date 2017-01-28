@@ -14,11 +14,12 @@ var campaignSchema = new Schema(
     published: Boolean,
     isZakaat: Boolean,
     amountRaised: Number,
-    images: [],
-    videos: [],
+    image: String,
+    video: String,
     type: String, //individual or cause
-    creator: String //id
-    //@todo: add category from predefined list
+    creator: String, //id
+    isApproved : Boolean,
+    category: String //DEFINE LIST HERE: health,education
 });
 
 

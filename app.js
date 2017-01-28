@@ -76,11 +76,18 @@ app.post('/loginUser', user.loginUser);
 app.get('/getUserPersonalData/:userId', user.getUserPersonalData);
 // app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
 app.post('/signupUser',user.signupUser);
-//app.post('/saveCampaign',user.saveCampaign);
+app.post('/saveCampaign',campaign.saveCampaign);
 //app.delete('/removeCampaign/:campaignId', user.removeCampaign);
 app.get('/getLiveCampaigns',campaign.getLiveCampaigns);
 app.get('/getPastCampaigns',campaign.getPastCampaigns);
 app.get('/getCampaign/:campaignId',campaign.getCampaign);
+app.get('/getGeneralFund',campaign.getGeneralFund)
+app.get('/getZakaatFund',campaign.getZakaatFund)
+app.post('/getCampaignsForUser',campaign.getCampaignsForUser);
+app.post('/getContributionsForUser',campaign.getContributionsForUser);
+app.post('/editCampaign',campaign.editCampaign);
+app.get('/getAllCampaigns',campaign.getAllCampaigns);
+app.post('/getCampaignsByCategory',campaign.getCampaignsByCategory);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

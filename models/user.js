@@ -2,6 +2,14 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
 
+var contributionSchema = new Schema(
+{
+    campaignId: String,
+    amount: Number,
+    confirmed: Boolean,
+    dateGiven: Date
+})
+
 
 
 var userSchema = new Schema(
@@ -23,7 +31,7 @@ var userSchema = new Schema(
         sparse: true
     },
     name:String,
-    campaigns: [],
+    contributions: [contributionSchema],
     city:String,
     country:String,
     postalCode:String,
@@ -39,8 +47,20 @@ var userSchema = new Schema(
     createdAt:Date
 });
 
+var contributionSchema = new Schema(
+{
+    campaignId: String,
+    amount: Number,
+    confirmed: Boolean,
+    dateGiven: Date
+})
+
+
 var User = mongoose.model('User', userSchema);
 
+var Contribution = mongoose.model('Contribution', contributionSchema);
+
 module.exports = {
-    User: User
+    User: User,
+    Contribution: Contribution
 };

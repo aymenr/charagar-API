@@ -107,12 +107,14 @@ exports.signupUser = function(req, res)
     {
         if (err)
         {
+        console.log("1:",err.message)
          utilities.make_error(res, "API_EXCEPTION", err.message);
      }
      else
      {
         if (result)
         {
+            console.log("2:","already exists");
             utilities.make_error(res,"CANNOT_CREATE","You have already signed up. Login Instead")
         }
         else
@@ -136,7 +138,7 @@ function performUserSignup(userData, res)
 {
     userData.signupDate = Date.now();
 
-
+    console.log("got here");
     // create new
     createUserAccount(userData).then(function(newUser)
     {
