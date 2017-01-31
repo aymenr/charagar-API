@@ -10,6 +10,7 @@ var router = express.Router();
 var app = express();
 
 
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -24,7 +25,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 var index = require('./controllers/index.js');
 var user = require('./controllers/user.js');
 var campaign= require('./controllers/campaign.js');
-
+var jwtauth = require('./controllers/jwtauth.js');
+var auth = require('./controllers/auth.js');
 
 var allowCrossDomain = function(req, res, next)
 {
@@ -49,7 +51,7 @@ var allowCrossDomain = function(req, res, next)
     }
     else
     {
-        res.header('Access-Control-Allow-Origin', "http://patari.pk");
+        res.header('Access-Control-Allow-Origin', "http://charagar.pk");
     }
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cache-Control');
@@ -67,27 +69,39 @@ var allowCrossDomain = function(req, res, next)
 
 app.use(allowCrossDomain);
 
+app.all('/api/v1/*', [jwtauth]);
+
 //routes
 app.get('/', index.index);
 
 
-
+// =========================LOGIN/SIGNUP=============================//
 app.post('/loginUser', user.loginUser);
-app.get('/getUserPersonalData/:userId', user.getUserPersonalData);
-// app.get('/getUserCampaigns/:userId', user.getUserCampaigns);
 app.post('/signupUser',user.signupUser);
-app.post('/saveCampaign',campaign.saveCampaign);
-//app.delete('/removeCampaign/:campaignId', user.removeCampaign);
+app.get('/api/v1/verifyToken', auth.verifyToken);
+
+//==========================CAMPAIGN END POINTS======================//
 app.get('/getLiveCampaigns',campaign.getLiveCampaigns);
 app.get('/getPastCampaigns',campaign.getPastCampaigns);
-app.get('/getCampaign/:campaignId',campaign.getCampaign);
 app.get('/getGeneralFund',campaign.getGeneralFund)
 app.get('/getZakaatFund',campaign.getZakaatFund)
-app.post('/getCampaignsForUser',campaign.getCampaignsForUser);
-app.post('/getContributionsForUser',campaign.getContributionsForUser);
-app.post('/editCampaign',campaign.editCampaign);
 app.get('/getAllCampaigns',campaign.getAllCampaigns);
 app.post('/getCampaignsByCategory',campaign.getCampaignsByCategory);
+app.get('/getCampaign/:campaignId',campaign.getCampaign);
+
+
+app.post('/api/v1/getCampaignsForUser',campaign.getCampaignsForUser);
+app.post('/api/v1/saveCampaign',campaign.saveCampaign);
+app.post('/api/v1/getContributionsForUser',campaign.getContributionsForUser);
+
+app.post('/api/v1/admin/editCampaign',campaign.editCampaign);
+
+
+//=========================USER END POINTS=============================================//
+
+app.get('/api/v1/user/getUserPersonalData/:userId', user.getUserPersonalData);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

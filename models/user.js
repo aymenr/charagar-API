@@ -14,7 +14,7 @@ var contributionSchema = new Schema(
 
 var userSchema = new Schema(
 {
-    userName:
+    name:
     {
         type: String
     },
@@ -27,8 +27,7 @@ var userSchema = new Schema(
     phone:
     {
         type: String,
-        unique: true,
-        sparse: true
+
     },
     name:String,
     contributions: [contributionSchema],
@@ -36,13 +35,9 @@ var userSchema = new Schema(
     country:String,
     postalCode:String,
     streetAddress:String,
-    facebookID: String,
-    avatar: String,
     password: String,
-    accessLevel: Number,
+    accessLevel: String,
     signupDate: Date,
-    forgotPasswordToken: String,
-    linkedIdentifier: String, // for uniquely identifying user when sharing
     updatedAt:Date,
     createdAt:Date
 });

@@ -1,4 +1,5 @@
 {
   "dbPath": "mongodb://localhost/charagar",
-  "dbName": "charagar"
+  "dbName": "charagar",
+  "secret": "HDQNWNYD3DXNZ7YZ76Z7Z67Z6ZNZAAASDC33DXX-X-3-"
 }

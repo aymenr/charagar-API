@@ -209,17 +209,13 @@ exports.getCampaignsByCategory= function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
+
 				res.send(result);
 			}
-		}
+		})
 
 
-	})
-
-}
+	}
 
 exports.saveCampaign = function(req,res) {
 
@@ -242,7 +238,7 @@ exports.saveCampaign = function(req,res) {
 
 
 exports.getContributionsForUser = function(req,res) {
-
+	console.log("xxxxxxx");
 	userModel.User
 	.find({"_id":ObjectId(req.body.userId)},{"contributions":1,"_id":0})
 	.lean()
