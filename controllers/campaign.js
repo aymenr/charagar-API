@@ -97,6 +97,32 @@ exports.getCampaign = function(req, res)
 
 }
 
+
+exports.deleteCampaign = function(req, res)
+{
+	campaignModel.Campaign
+	.find({"_id":ObjectId(req.body.campaignId)})
+	.remove()
+	.exec(function(err,result) {
+
+		if(err) {
+			utilities.make_error(res,"API_EXCEPTION",err)
+		} else {
+			console.log("DELETE;");
+			// if(result.length == 0) {
+			// 	utilities.make_error(res,"NOT_EXISTS",err)
+			// } else {
+				res.send(result);
+			//}
+		}
+
+
+	})
+
+}
+
+
+
 exports.getAllCampaigns = function(req, res)
 {
 
@@ -220,7 +246,7 @@ exports.getCampaignsByCategory= function(req, res)
 exports.saveCampaign = function(req,res) {
 
 	var campaign = new campaignModel.Campaign(req.body.campaign);
-
+	console.log('CAMPAIGN:',campaign);
 	campaign.save(function(err, response)
 	{
 		if (err)
@@ -238,26 +264,35 @@ exports.saveCampaign = function(req,res) {
 
 
 exports.getContributionsForUser = function(req,res) {
-	console.log("xxxxxxx");
+	console.log("xxxxxxx:",req.body.userId);
 	userModel.User
 	.find({"_id":ObjectId(req.body.userId)},{"contributions":1,"_id":0})
 	.lean()
 	.exec(function(err,contributions) {
-
+		console.log("AAAAA");
 		if(err) {
+			console.log("BBBBB");
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
+			console.log("CCCCCCC");
+			if(contributions.length==0) {
+				utilities.make_error(res,"NOT_EXISTS","User Not Found");
+			}
 
-			var contributionArray = extractCampaignIds(contributions[0].contributions)
-			getCampaignsByIds(contributionArray).then(function(campaigns){
+			if(contributions[0].contributions && contributions[0].contributions.length !=0 ) {
 
-				var finalResult = mergeContributionsAndCampaigns(contributions[0].contributions,campaigns)
-				console.log("good shot:",finalResult);
-				res.send(finalResult);
-			}, function(err) {
-				utilities.make_error(res,"API_EXCEPTION",err)
-			})
+				var contributionArray = extractCampaignIds(contributions[0].contributions)
+				getCampaignsByIds(contributionArray).then(function(campaigns){
 
+					var finalResult = mergeContributionsAndCampaigns(contributions[0].contributions,campaigns)
+					console.log("good shot:",finalResult);
+					res.send(finalResult);
+				}, function(err) {
+					utilities.make_error(res,"API_EXCEPTION",err)
+				})
+			} else {
+				res.send([]);
+			}
 
 		}
 	})
@@ -266,7 +301,8 @@ exports.getContributionsForUser = function(req,res) {
 }
 
 exports.editCampaign = function(req,res) {
-
+	console.log("id:", req.body.campaignId)
+	console.log("entire edit:", req.body.campaign);
 	campaignModel.Campaign
 	.update({"_id":ObjectId(req.body.campaignId)},req.body.campaign, function(err,campaign) {
 		if(err) {
@@ -278,6 +314,25 @@ exports.editCampaign = function(req,res) {
 
 
 }
+exports.requestDeletion = function(req,res) {
+
+
+
+	campaignModel.Campaign
+	.update({"_id":ObjectId(req.body.campaignId),"creator":req.body.userId},{$set:{"requestedDeletion":true}}, function(err,campaign) {
+		if(err) {
+			utilities.make_error(res,"API_EXCEPTION",err)
+		}  else {
+
+			res.send("done");
+		}
+	})
+
+
+}
+
+
+
 
 
 mergeContributionsAndCampaigns = function(contributions,campaigns) {

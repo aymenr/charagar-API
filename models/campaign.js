@@ -19,6 +19,7 @@ var campaignSchema = new Schema(
     type: String, //individual or cause
     creator: String, //id
     isApproved : Boolean,
+    requestedDeletion: Boolean,
     category: String //DEFINE LIST HERE: health,education
 });
 

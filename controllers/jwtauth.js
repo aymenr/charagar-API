@@ -7,6 +7,7 @@ var q = require('q');
 
 module.exports = function(req, res, next) {
     // get token from request
+    console.log("REQUESTRTTT:",req.body);
     var token = null;
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
     {
@@ -32,8 +33,24 @@ module.exports = function(req, res, next) {
         validateUser(decoded._id).then(function(user) {
             if (user) {
 
-                if ((req.url.indexOf('admin') >= 0 && user.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
-                    next(); // To move to next middleware
+                console.log("REQUEST BODY:",req.body.userId, " TOKEN USERID:", user[0]._id);
+
+
+                if ((req.url.indexOf('admin') >= 0 && user[0].accessLevel == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
+                    console.log("IMPORTANT SHIT:", req.url);
+                    if(req.url.indexOf('/api/v1/user/')>=0) {
+                        console.log("HEY YOU");
+                        if(req.body.userId == user[0]._id){
+                            next()
+                        } else {
+                            res.status(403);
+                            res.json({"status": 403,"message": "Not Authorized"});
+                            return
+                        }
+                    } else {
+                        next()
+                    }
+
                 } else {
                     res.status(403);
                     res.json({"status": 403,"message": "Not Authorized"});
@@ -48,16 +65,16 @@ module.exports = function(req, res, next) {
             }
         })
 
-        } catch (err) {
-            res.status(500);
-            res.json({"status": 500,"message": "Oops something went wrong","error": err});
-        }
-
-    } else {
-        res.status(401);
-        res.json({  "status": 401,  "message": "Unauthorized, Invalid Token"});
-        return;
+    } catch (err) {
+        res.status(500);
+        res.json({"status": 500,"message": "Oops something went wrong","error": err});
     }
+
+} else {
+    res.status(401);
+    res.json({  "status": 401,  "message": "Unauthorized, Invalid Token"});
+    return;
+}
 };
 
 
@@ -67,36 +84,36 @@ function validateUser(userId)
   var deferred = q.defer();
 
   var userProjection=
-    {
-        password:0,
-        city:0,
-        country:0,
-        phone:0,
-        signupDate:0,
-        campaigns:0,
-        contributions:0
-    };
+  {
+    password:0,
+    city:0,
+    country:0,
+    phone:0,
+    signupDate:0,
+    campaigns:0,
+    contributions:0
+};
 
-    userModel.User
-    .find(
-        { _id: new ObjectId(userId)}, userProjection)
-    .exec(function(err, result)
+userModel.User
+.find(
+    { _id: new ObjectId(userId)}, userProjection)
+.exec(function(err, result)
+{
+    if (err)
     {
-        if (err)
+        deferred.resolve(null);
+    }
+    else
+    {
+        if(result.length ==0)
         {
             deferred.resolve(null);
-        }
-        else
+        } else
         {
-            if(result.length ==0)
-            {
-                deferred.resolve(null);
-            } else
-            {
-                deferred.resolve(result);
-            }
-
+            deferred.resolve(result);
         }
-    });
-    return deferred.promise;
+
+    }
+});
+return deferred.promise;
 }

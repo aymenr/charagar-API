@@ -90,17 +90,19 @@ app.post('/getCampaignsByCategory',campaign.getCampaignsByCategory);
 app.get('/getCampaign/:campaignId',campaign.getCampaign);
 
 
-app.post('/api/v1/getCampaignsForUser',campaign.getCampaignsForUser);
+
 app.post('/api/v1/saveCampaign',campaign.saveCampaign);
-app.post('/api/v1/getContributionsForUser',campaign.getContributionsForUser);
+
 
 app.post('/api/v1/admin/editCampaign',campaign.editCampaign);
-
+app.post('/api/v1/admin/deleteCampaign',campaign.deleteCampaign);
 
 //=========================USER END POINTS=============================================//
 
-app.get('/api/v1/user/getUserPersonalData/:userId', user.getUserPersonalData);
-
+app.post('/api/v1/user/getUserPersonalData', user.getUserPersonalData);
+app.post('/api/v1/user/getCampaignsForUser',campaign.getCampaignsForUser);
+app.post('/api/v1/user/getContributionsForUser',campaign.getContributionsForUser);
+app.post('/api/v1/user/requestDeletion',campaign.requestDeletion);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

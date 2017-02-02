@@ -153,9 +153,10 @@ exports.getUserPersonalData = function(req, res)
         campaigns:0,
         contributions:0
     }
+    // console.log("HEADER:",req.header);
     userModel.User
     .find(
-        { _id: new ObjectId(req.params.userId)}, userProjection)
+        { _id: new ObjectId(req.body.userId)}, userProjection)
     .exec(function(err, result)
     {
         if (err)
