@@ -25,11 +25,9 @@ exports.getLiveCampaigns = function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -59,11 +57,9 @@ exports.getPastCampaigns = function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -85,11 +81,9 @@ exports.getCampaign = function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -134,11 +128,9 @@ exports.getAllCampaigns = function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -158,11 +150,9 @@ exports.getGeneralFund= function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -182,11 +172,9 @@ exports.getZakaatFund= function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -205,11 +193,9 @@ exports.getCampaignsForUser= function(req, res)
 			utilities.make_error(res,"API_EXCEPTION",err)
 		} else {
 
-			if(result.length == 0) {
-				utilities.make_error(res,"NOT_EXISTS",err)
-			} else {
-				res.send(result);
-			}
+
+			res.send(result);
+
 		}
 
 
@@ -223,9 +209,9 @@ exports.getCampaignsByCategory= function(req, res)
 	var query;
 
 	if(req.body.category) {
-		query = {"category":req.body.category}
+		query = {"category":req.body.category,"isApproved":true}
 	} else {
-		query = {}
+		query = {"isApproved":true}
 	}
 	campaignModel.Campaign
 	.find(query)
@@ -236,12 +222,12 @@ exports.getCampaignsByCategory= function(req, res)
 		} else {
 
 
-				res.send(result);
-			}
-		})
+			res.send(result);
+		}
+	})
 
 
-	}
+}
 
 exports.saveCampaign = function(req,res) {
 
