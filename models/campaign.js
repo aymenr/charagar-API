@@ -9,6 +9,8 @@ var campaignSchema = new Schema(
     goal: Number,
     description: String,
     campaignImage: String,
+    userImage:String,
+    otherImages: [],
     startDate: Date,
     endDate: Date,
     published: Boolean,
