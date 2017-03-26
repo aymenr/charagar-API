@@ -147,6 +147,7 @@ function createUserAccount(userData)
 
 exports.getUserPersonalData = function(req, res)
 {
+    console.log("ATLEAST ITS COMING HEREE");
     var userProjection = {
         password:0,
         _id:0,

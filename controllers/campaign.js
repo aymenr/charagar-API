@@ -35,7 +35,32 @@ exports.getLiveCampaigns = function(req, res)
 
 }
 
-
+exports.getUsername = function(req, res)
+{	
+	console.log("hi beta");
+  
+    var userProjection = {
+        password:0,
+        _id:0,
+        campaigns:0,
+        contributions:0
+    }
+   console.log("HEADER:",req.body.userId);
+    userModel.User
+    .find(
+        { _id: new ObjectId(req.body.userId)}, userProjection)
+    .exec(function(err, result)
+    {
+        if (err)
+        {
+            utilities.make_error(res, 'API_EXCEPTION', err.message);
+        }
+        else
+        {
+            res.send(result);
+        }
+    });
+}
 
 
 exports.getPastCampaigns = function(req, res)

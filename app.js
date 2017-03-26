@@ -88,8 +88,7 @@ app.get('/getZakaatFund',campaign.getZakaatFund)
 app.get('/getAllCampaigns',campaign.getAllCampaigns);
 app.post('/getCampaignsByCategory',campaign.getCampaignsByCategory);
 app.get('/getCampaign/:campaignId',campaign.getCampaign);
-
-
+app.post('/getUsername',campaign.getUsername);
 
 app.post('/api/v1/saveCampaign',campaign.saveCampaign);
 
